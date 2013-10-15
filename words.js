@@ -3,10 +3,12 @@ var liner = require('./liner')
 var _ = require('underscore')
 
 
-var wordCounter = function(filepath) {
+var wordCounter = function(filepath, callback) {
     var that = {
         wordCount: {}
     };
+
+    that.onCompletedCallback = callback;
 
     that.doCount = function() {
         var line
@@ -26,7 +28,7 @@ var wordCounter = function(filepath) {
     that.manipulateData = function() {
         var zipped = _.pairs(that.wordCount);
         var sorted = _.sortBy(zipped, function(pair) { return -1 * pair[1]; } );
-        console.dir(sorted.slice(0,25));
+        that.onCompletedCallback(sorted.slice(0,25));
     }
 
     that.countWords = function() {
@@ -37,10 +39,12 @@ var wordCounter = function(filepath) {
     }
 
     return that;
+
 }
 
-var myCounter = wordCounter('./war_and_peace.txt');
-myCounter.countWords();
+module.exports = wordCounter;
+
+
 
 
 
